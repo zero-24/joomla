@@ -77,7 +77,7 @@ php build/build.php --fullurl "https://github.com/joomla/joomla-cms/releases/dow
 
 ### Pre-build Requirements
 1. Commit all changes to git
-2. Create git tag: `git tag -s 5.3.2v1` (version.pack)
+2. Create git tag: `git tag -s 5.3.2v1` (where `5.3.2` is the Joomla version and `v1` is the language pack version; tag format: `<JoomlaVersion>v<PackVersion>`)
 3. Verify umask is 022: `umask 022`
 
 ### Build Timing
