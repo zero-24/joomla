@@ -25,32 +25,22 @@ git remote add upstream git@github.com:joomlagerman/joomla.git
 Make sure that `origin` remains your fork (your personal copy), and `upstream` points to the main/original project repository.
 
 ## Available scripts
-- `sync-5.3-dev.sh` – syncs branch `5.3-dev` with upstream and pushes to origin
-- `sync-5.4-dev.sh` – syncs branch `5.4-dev` with upstream and pushes to origin
-- `sync-6.0-dev.sh` – syncs branch `6.0-dev` with upstream and pushes to origin
-- `sync-all.sh` – runs all three sync scripts in sequence
+- `sync-branch.sh` – syncs a given branch passed as parameter.
+- `branches.txt` – defines which branches are considered for bulk sync.
+- `sync-all.sh` – reads from `branches.txt` and syncs all listed branches.
 
 ## Usage
 From the repo root, run:
+
 ```bash
+# Sync a single branch (e.g. 6.0-dev)
+./.git-tools/sync-branch.sh 6.0-dev
+
+# Sync all branches listed in branches.txt
 ./.git-tools/sync-all.sh
 ```
 
-## Examples
-
-Run a single branch sync:
-
-```bash
-./.git-tools/sync-5.3-dev.sh
-./.git-tools/sync-5.4-dev.sh
-./.git-tools/sync-6.0-dev.sh
-```
-
-Run all three in sequence:
-
-```bash
-./.git-tools/sync-all.sh
-```
+**Note:** The older branch-specific scripts (`sync-5.3-dev.sh`, `sync-5.4-dev.sh`, `sync-6.0-dev.sh`) are deprecated and should be removed in favor of the parameterized scripts.
 
 ## Advanced usage with flags
 
@@ -63,15 +53,15 @@ Examples:
 
 ```bash
 # Merge instead of fast-forward only
-./.git-tools/sync-5.3-dev.sh --merge
+./.git-tools/sync-branch.sh 5.3-dev --merge
 
 # Rebase instead of merge
-./.git-tools/sync-5.4-dev.sh --rebase
+./.git-tools/sync-branch.sh 5.4-dev --rebase
 
 # Force run even with a dirty working tree
-./.git-tools/sync-6.0-dev.sh --force
+./.git-tools/sync-branch.sh 6.0-dev --force
 
-# Combine flags
+# Combine flags for all branches
 ./.git-tools/sync-all.sh --merge --force
 ```
 

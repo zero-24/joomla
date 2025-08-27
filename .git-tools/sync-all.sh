@@ -1,12 +1,23 @@
 #!/usr/bin/env bash
-# Sync all relevant branches (5.3-dev, 5.4-dev, 6.0-dev) from upstream and push to origin.
-# Any flags you pass (e.g., --merge, --rebase, --force) are forwarded to each script.
+# Sync all branches listed in .git-tools/branches.txt
+# Usage: ./.git-tools/sync-all.sh [--force] [--merge] [--rebase]
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BRANCH_LIST="${DIR}/branches.txt"
 
-"$DIR/sync-5.3-dev.sh" "$@"
-"$DIR/sync-5.4-dev.sh" "$@"
-"$DIR/sync-6.0-dev.sh" "$@"
+if [ ! -f "${BRANCH_LIST}" ]; then
+  echo "❌ Branch list not found at ${BRANCH_LIST}" >&2
+  exit 1
+fi
 
-echo "✅ All branches synced."
+flags=("$@")
+
+while IFS= read -r BRANCH || [ -n "$BRANCH" ]; do
+  [[ -z "$BRANCH" || "$BRANCH" =~ ^# ]] && continue
+  echo "────────────────────────────────────────"
+  echo "🔄 Syncing ${BRANCH}…"
+  "${DIR}/sync-branch.sh" "${BRANCH}" "${flags[@]}"
+done < "${BRANCH_LIST}"
+
+echo "✅ All listed branches processed."
