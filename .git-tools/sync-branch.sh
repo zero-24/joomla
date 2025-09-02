@@ -44,9 +44,14 @@ if ! $force; then
 fi
 
 echo "➡️  Fetching from remotes…"
-git fetch --prune upstream "${BRANCH}" || true
-git fetch --prune origin   "${BRANCH}" || true
-
+if ! git fetch --prune upstream "${BRANCH}"; then
+  echo "❌ Failed to fetch from 'upstream'. Check your network connection and permissions." >&2
+  exit 1
+fi
+if ! git fetch --prune origin "${BRANCH}"; then
+  echo "❌ Failed to fetch from 'origin'. Check your network connection and permissions." >&2
+  exit 1
+fi
 # Ensure local branch exists and switch to it
 if git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
   git switch "${BRANCH}"
