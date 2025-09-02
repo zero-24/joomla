@@ -68,8 +68,10 @@ echo "➡️  Syncing local ${BRANCH} with upstream/${BRANCH} (mode=${mode})…"
 if git show-ref --verify --quiet "refs/remotes/upstream/${BRANCH}"; then
   case "$mode" in
     ff)
-      git merge --ff-only "upstream/${BRANCH}" || {
-        echo "❌ Fast-forward merge not possible. Use --merge or --rebase."; exit 1; }
+      if ! git merge --ff-only "upstream/${BRANCH}"; then
+        echo "❌ Fast-forward merge not possible. Use --merge or --rebase."
+        exit 1
+      fi
       ;;
     merge)
       git merge --no-edit "upstream/${BRANCH}"
